@@ -8,9 +8,18 @@ const userSelect = document.querySelector("#userSelect");
 const switchUserBtn = document.querySelector(".switch-user-btn");
 const currentUser = document.querySelector(".current-user");
 
-let users = [{ id: "admin", username: "Admin", role: "admin" }];
+const adminViewToggle = document.querySelector(".admin-view-toggle");
+const personalViewBtn = document.querySelector(".personal-view-btn");
+const adminViewBtn = document.querySelector(".admin-view-btn");
+
+let users = [];
 let todos = [];
-let currentUserId = "admin";
+let currentUserId = "";
+let adminView = "personal";
+
+function generateId() {
+  return Date.now().toString() + Math.random().toString(16).slice(2);
+}
 
 function saveData() {
   localStorage.setItem("todoUsers", JSON.stringify(users));
@@ -31,18 +40,21 @@ function loadData() {
     todos = JSON.parse(savedTodos);
   }
 
-  if (!users.some((user) => user.id === "admin")) {
-    users.unshift({
-      id: "admin",
+  let admin = users.find((user) => user.role === "admin");
+
+  if (!admin) {
+    admin = {
+      id: generateId(),
       username: "Admin",
       role: "admin",
-    });
+    };
+    users.unshift(admin);
   }
 
   if (savedCurrentUser && users.some((user) => user.id === savedCurrentUser)) {
     currentUserId = savedCurrentUser;
   } else {
-    currentUserId = "admin";
+    currentUserId = admin.id;
   }
 }
 
@@ -67,6 +79,11 @@ function renderData() {
   userSelect.value = currentUserId;
   const selectedUser = getCurrentUser();
 
+  adminViewToggle.hidden = selectedUser.role !== "admin";
+  if (selectedUser.role !== "admin") {
+    adminView = "personal";
+  }
+
   currentUser.textContent =
     selectedUser.role === "admin"
       ? "Current User: Admin (viewing all todos)"
@@ -76,10 +93,12 @@ function renderData() {
 function renderTodos() {
   todoContainer.innerHTML = "";
   const selectedUser = getCurrentUser();
-  const visibleTodos =
-    selectedUser.role === "admin"
-      ? todos
-      : todos.filter((todo) => todo.userId === currentUserId);
+
+  const isAdmin = selectedUser.role === "admin";
+  const isAdminPreview = isAdmin && adminView === "admin";
+  const visibleTodos = isAdminPreview
+    ? todos
+    : todos.filter((todo) => todo.userId === currentUserId);
 
   visibleTodos.forEach((todo) => {
     const li = document.createElement("li");
@@ -90,7 +109,7 @@ function renderTodos() {
       li.classList.add("completed");
     }
 
-    if (selectedUser.role === "admin") {
+    if (isAdminPreview) {
       const owner = users.find((user) => user.id === todo.userId);
       const ownerLabel = document.createElement("small");
       ownerLabel.textContent = "Owner: " + (owner ? owner.username : "Uknown");
@@ -111,7 +130,7 @@ function renderTodos() {
     delBtn.textContent = "Delete";
     delBtn.classList.add("delete");
 
-    if (selectedUser.role === "admin") {
+    if (isAdminPreview && todo.userId !== currentUserId) {
       doneBtn.disabled = true;
       editBtn.disabled = true;
       delBtn.disabled = true;
@@ -188,7 +207,7 @@ createUserBtn.addEventListener("click", () => {
   }
 
   const newUser = {
-    id: Date.now().toString(),
+    id: generateId(),
     username: username,
     role: "user",
   };
@@ -212,14 +231,24 @@ switchUserBtn.addEventListener("click", () => {
   alert("User switched successfully!");
 });
 
+personalViewBtn.addEventListener("click", ()=>{
+  adminView = "personal";
+  renderTodos();
+})
+
+adminViewBtn.addEventListener("click",()=>{
+  adminView ="admin";
+  renderTodos();
+})
+
 saveBtn.addEventListener("click", () => {
   const task = inputTask.value.trim();
   const selectedUser = getCurrentUser();
-  if (selectedUser.role === "admin") {
-    alert("Switch to a regular user to add todos.");
-    inputTask.value = "";
-    return;
-  }
+ if(selectedUser.role === 'admin'){
+  alert("Switch to as regular user to add todos.");
+  inputTask.value = "";
+  return;
+ }
 
   if (!task || /\d/.test(task)) {
     alert("Please enter a valid task (no numbers or empty input).");
@@ -244,76 +273,3 @@ loadData();
 saveData();
 renderData();
 renderTodos();
-
-// saveBtn.addEventListener("click", () => {
-//   if (inputTask.value.trim() !== "" && !/\d/.test(inputTask.value)) {
-//     const li = document.createElement("li");
-//     const todoText = document.createElement("span");
-//     todoText.innerText = inputTask.value;
-
-//     const doneBtn = document.createElement("button");
-//     doneBtn.innerText = "Done";
-//     doneBtn.classList.add("done");
-//     const editBtn = document.createElement("button");
-//     editBtn.innerText = "Edit";
-//     editBtn.classList.add("edit");
-//     const delBtn = document.createElement("button");
-//     delBtn.innerText = "Delete";
-//     delBtn.classList.add("delete");
-
-//     const btnWrapper = document.createElement("div");
-
-//     btnWrapper.appendChild(doneBtn);
-//     btnWrapper.appendChild(editBtn);
-//     btnWrapper.appendChild(delBtn);
-//     li.appendChild(todoText);
-//     li.appendChild(btnWrapper);
-
-//     todoContainer.appendChild(li);
-
-//     inputTask.value = "";
-
-//     doneBtn.addEventListener("click", () => {
-//       li.classList.toggle("completed");
-//     });
-
-//     editBtn.addEventListener("click", () => {
-//       if (editBtn.innerText === "Edit") {
-//         const input = document.createElement("input");
-//         input.value = todoText.innerText;
-//         todoText.replaceWith(input);
-
-//         editBtn.innerText = "Save";
-//         editBtn.classList.add("save");
-
-//         editBtn.inputElement = input;
-//       } else {
-//         const input = editBtn.inputElement;
-
-//         if (input.value.trim() === "") {
-//           alert("Todo cannot be empty");
-//           return;
-//         }
-
-//         if (/\d/.test(input.value)) {
-//           alert("Numbers are not allowed");
-//           return;
-//         }
-
-//         todoText.innerText = input.value.trim();
-//         input.replaceWith(todoText);
-
-//         editBtn.innerText = "Edit";
-//         editBtn.classList.remove("save");
-//         delete editBtn.inputElement;
-//       }
-//     });
-
-//     delBtn.addEventListener("click", () => {
-//       li.remove();
-//     });
-//   } else {
-//     alert(`Please enter a valid task (no numbers or empty input)`);
-//     inputTask.value = "";
-//   }
-// });
