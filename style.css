@@ -25,6 +25,24 @@ body {
   color: #fff;
 }
 
+.admin-view-toggle {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.admin-view-toggle button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #ddd;
+}
+
+.admin-view-toggle button:hover {
+  background-color: #bbb;
+}
+
 .todo-container {
   display: flex;
   align-items: center;
