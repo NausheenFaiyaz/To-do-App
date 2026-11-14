@@ -4,43 +4,138 @@
   box-sizing: border-box;
   text-decoration: none;
 }
+
 body {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100vh;
-  background-color: white;
+  background-color: #fffdf7;
   background-image:
-    linear-gradient(45deg, #fdc9c9 25%, transparent 25%),
-    linear-gradient(-45deg, #ccc 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #ccc 75%),
-    linear-gradient(-45deg, transparent 75%, #ccc 75%);
-  background-size: 20px 20px;
-  background-position:
-    0 0,
-    0 10px,
-    10px -10px,
-    -10px 0px;
-  color: #fff;
+    linear-gradient(rgba(0, 0, 0, 0.08) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1.5px, transparent 1.5px);
+  background-size: 35px 35px;
+  color: #fcf8f8;
+}
+
+.user-panel {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #f8f9fc;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.user-wrapper-pannel{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.create-user {
+  display: flex;
+  gap: 10px;
+}
+
+.username-input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  outline: none;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.username-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.switch-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.switch-user label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.switch-user select {
+  flex: 1;
+  min-width: 100px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background-color: white;
+  outline: none;
+  cursor: pointer;
+}
+
+.create-user-btn,
+.switch-user-btn {
+  padding: 10px 17px;
+  border: none;
+  border-radius: 7px;
+  background-color: #6366f1;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.create-user-btn:hover,
+.switch-user-btn:hover {
+  background-color: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.current-user {
+  margin: 0;
+  padding: 10px 12px;
+  color: #000000;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .admin-view-toggle {
   display: flex;
   gap: 10px;
-  margin: 15px 0;
+  padding: 5px;
+  border-radius: 9px;
+}
+
+.admin-view-toggle[hidden] {
+  display: none !important;
 }
 
 .admin-view-toggle button {
-  padding: 8px 15px;
+  flex: 1;
+  padding: 11px;
   border: none;
-  border-radius: 6px;
+  border-radius: 7px;
+  background-color: rgb(176, 209, 239);
+  color: #000000;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  background-color: #ddd;
+  transition: 0.3s;
 }
 
 .admin-view-toggle button:hover {
-  background-color: #bbb;
+  background-color: #e0f3bc;
 }
 
 .todo-container {
@@ -49,14 +144,15 @@ body {
   justify-content: center;
   flex-direction: column;
   gap: 10px;
-  background-color: #fca8a8;
+  background-color: #1a1818;
   padding: 1rem 1rem;
-  width: 50rem;
-  height: 80vh;
+  width: 60rem;
+  height: 85vh;
+  border-radius: 10px;
   font-family: "Courier New", Courier, monospace;
   transition: 0.2s ease;
-  box-shadow: 12px 12px 0 #2c2b2b;
 }
+
 .input-container {
   width: 100%;
   display: flex;
@@ -64,12 +160,12 @@ body {
   justify-content: space-evenly;
   gap: 1rem;
 }
+
 .input-container .todo-input {
   width: 75%;
   height: 2.5rem;
   font-size: 1rem;
   padding: 5px;
-  border: 2px solid rgb(255, 163, 179);
 }
 
 button {
@@ -77,14 +173,23 @@ button {
   width: 5rem;
   font-size: 1rem;
   margin: 0px 5px;
-  box-shadow: 3px 3px 0 #2c2b2b;
-
+  box-shadow: 3px 3px 0 #363333;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 4px 4px 0 #2c2b2b;
 }
 
 .input-container .addBtn {
   width: 25%;
-  background-color: #c9f3d9;
+  background-color: #6366f1;
+  color: white;
 }
 
 ul {
@@ -96,7 +201,7 @@ ul {
   flex-direction: column;
   gap: 10px;
   padding: 10px;
-  background-color: #fcf6bd;
+  background-color: #fffcdd;
   overflow: scroll;
   scrollbar-width: none;
   transition: 0.2s ease;
@@ -110,9 +215,8 @@ li {
   justify-content: space-between;
   padding: 5px 5px 5px 10px;
   gap: 10px;
-  background-color: #d6d1a0;
+  background-color: #e1f4fec9;
   transition: 0.2s ease-in-out;
-
 }
 
 li span,
@@ -129,20 +233,20 @@ li input {
 }
 
 li .done {
-  background-color: rgb(187, 255, 187);
+  background-color: #e0f3bc;
 }
 li .edit {
-  background-color: rgb(141, 198, 252);
+  background-color: rgb(176, 209, 239);
 }
 li .save {
-  background-color: rgb(233, 252, 141);
+  background-color: rgb(254, 254, 180);
 }
 
 li .delete {
-  background-color: rgb(248, 151, 151);
+  background-color: rgb(250, 155, 155);
 }
 
 .completed {
   text-decoration: line-through;
-  color: #f97777;
+  color: #e52727;
 }
