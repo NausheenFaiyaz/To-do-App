@@ -86,7 +86,7 @@ function renderData() {
 
   currentUser.textContent =
     selectedUser.role === "admin"
-      ? "Current User: Admin (viewing all todos)"
+      ? "Current User: Admin"
       : "Current User: " + selectedUser.username;
 }
 
@@ -243,12 +243,6 @@ adminViewBtn.addEventListener("click",()=>{
 
 saveBtn.addEventListener("click", () => {
   const task = inputTask.value.trim();
-  const selectedUser = getCurrentUser();
- if(selectedUser.role === 'admin'){
-  alert("Switch to as regular user to add todos.");
-  inputTask.value = "";
-  return;
- }
 
   if (!task || /\d/.test(task)) {
     alert("Please enter a valid task (no numbers or empty input).");
@@ -264,6 +258,7 @@ saveBtn.addEventListener("click", () => {
   };
 
   todos.push(newTodo);
+
   inputTask.value = "";
   saveData();
   renderTodos();
